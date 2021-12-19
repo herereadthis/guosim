@@ -1,4 +1,4 @@
-name: 'Bump Version'
+name: 'Bump Action'
 description: 'Bump the version number of the repo'
 inputs:
   base_branch:

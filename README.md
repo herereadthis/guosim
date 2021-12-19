@@ -1,6 +1,6 @@
-# Bump Action
+# action-bump-node
 
-This JavaScript based Github will update npm package files in in specified directories
+This JavaScript-based Github action will update npm package files in specified directories for node.js applications.
 
 ## Inputs
 
