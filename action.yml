@@ -7,9 +7,17 @@ inputs:
   version:
     description: 'Version Number'
     required: true
-# outputs:
-#   time: # id of output
-#     description: 'The time we greeted you'
+  create_pull_request:
+    description: 'Create Pull Request'
+    required: true
+  package_directories:
+    description: 'Package Directories'
+    required: true
+outputs:
+  new_branch:
+    description: 'Bump Branch'
+  new_version_number:
+    description: 'New Version Number'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'index.js'
