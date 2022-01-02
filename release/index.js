@@ -5,15 +5,16 @@ const CREATE_PROD_RELEASE = process.env.create_prod_release === 'true';
 
 const getBody = (sha, commitMessage, branch) => {
     return `
-* SHA: ${sha}
-* Commit message: \`${commitMessage}\`
-* Branch: \`${branch}\`
+* Tag Verification
+  * SHA: ${sha}
+  * Commit message: \`${commitMessage}\`
+  * Branch: \`${branch}\`
     `;
 };
 
 const getAppVersion = () => {
     const currentVersion = shell.exec(`echo $(node -p -e "require('./package.json').version")`);
-    return currentVersion.stdout.toString().replace(/\s+/g, '');
+    return currentVersion.stdout.toString().trim();
 };
 
 const run = async ({github, context, core}) => {
