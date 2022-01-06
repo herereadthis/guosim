@@ -3,8 +3,6 @@ const shell = require('shelljs');
 const simpleGit = require('simple-git');
 const semver = require('semver');
 
-const package = require('./package.json');
-
 const git = simpleGit();
 
 // Action inputs
@@ -32,7 +30,9 @@ const getNewVersion = () => {
         throw new Error('invalid version!');
     }
 
-    return semver.inc(package.version, VERSION);
+    const currentVersion = shell.exec(`echo $(node -p -e "require('./package.json').version")`);
+
+    return semver.inc(currentVersion.stdout, VERSION);
 };
 
 /**
@@ -102,15 +102,19 @@ const createVersionBumpPullRequest = async (baseBranch, newBranch, commitMessage
     }
 }
 
-const newVersionNumber = getNewVersion();
-const newBranch = `bump-version-${newVersionNumber}`;
-const commitMessage = getCommitMessage(newVersionNumber);
-
-core.setOutput("new_version_number", newVersionNumber);
-core.setOutput("new_branch", newBranch);
-
-if (CREATE_PULL_REQUEST) {
-    createVersionBumpPullRequest(BASE_BRANCH, newBranch, commitMessage);
-} else {
-    pushVersionBump(BASE_BRANCH, commitMessage);
+const run = async () => {
+    const newVersionNumber = getNewVersion();
+    const newBranch = `bump-version-${newVersionNumber.split('.').join('-')}`;
+    const commitMessage = getCommitMessage(newVersionNumber);
+    
+    core.setOutput("new_version_number", newVersionNumber);
+    core.setOutput("new_branch", newBranch);
+    
+    if (CREATE_PULL_REQUEST) {
+        createVersionBumpPullRequest(BASE_BRANCH, newBranch, commitMessage);
+    } else {
+        pushVersionBump(BASE_BRANCH, commitMessage);
+    }
 }
+
+run();
